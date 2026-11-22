@@ -1,0 +1,32 @@
+# Rust build output
+/target/
+**/*.rs.bk
+
+# Embedded/ESP32 flash artifacts
+*.bin
+*.elf
+*.map
+*.hex
+*.partitions
+flash_encryption_key.bin
+bootloader.bin
+partition-table.bin
+
+# Editor and IDE configuration
+.vscode/
+.zed/
+.helix/
+.nvim.lua
+.idea/
+
+# MSVC debugging information
+*.pdb
+
+# OS metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs and crash dumps
+*.log
+*.dmp
