@@ -9,7 +9,7 @@
 
 use esp_hal::clock::CpuClock;
 use esp_hal::delay::Delay;
-use esp_hal::gpio::{Level, Output, OutputConfig};
+use esp_hal::gpio::{Input, InputConfig, Level, Output, OutputConfig, Pull};
 use esp_hal::main;
 use esp_println::println;
 
@@ -33,22 +33,33 @@ fn main() -> ! {
 
     let config = esp_hal::Config::default().with_cpu_clock(CpuClock::max());
     let peripherals = esp_hal::init(config);
+    let delay = Delay::new();
 
     println!("Initializing ESP32C2 blinky FW");
 
     let output_config = OutputConfig::default();
+    let input_config = InputConfig::default().with_pull(Pull::Up);
     let mut led = Output::new(peripherals.GPIO8, Level::High, output_config);
-
-    let delay = Delay::new();
+    let button = Input::new(peripherals.GPIO9, input_config);
+    let mut was_pressed: bool = false;
+    let mut led_on: bool = false;
 
     loop {
-        led.set_low();
-        println!("Led ON");
-        delay.delay_millis(500);
+        let is_pressed = button.is_low();
+        if is_pressed && !was_pressed {
+            led_on = !led_on;
 
-        led.set_high();
-        println!("Led OFF");
-        delay.delay_millis(500);
+            if led_on {
+                led.set_low();
+                println!("Led ON");
+            } else {
+                led.set_high();
+                println!("Led OFF");
+            }
+
+            delay.delay_millis(50);
+        }
+        was_pressed = is_pressed;
     }
 
     // for inspiration have a look at the examples at https://github.com/esp-rs/esp-hal/tree/esp-hal-v1.2.2/examples
