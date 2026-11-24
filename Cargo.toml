@@ -9,15 +9,17 @@ name = "esp32c2-blinky"
 path = "./src/bin/main.rs"
 
 [dependencies]
-esp-hal = { version = "~1.2.2", features = ["esp32c2"] }
-
-
+esp-hal = { version = "~1.2.0", features = ["esp32c2", "unstable"] }
 esp-bootloader-esp-idf = { version = "0.6.0", features = ["esp32c2"] }
-
-critical-section = "1.2.0"
 esp-println = { version = "0.18.0", features = ["esp32c2"] }
 
+# Replace esp-wifi with esp-radio + task scheduler
+esp-radio = { version = "1.0.0-beta.1", features = ["esp32c2", "wifi", "esp-now", "esp-alloc", "unstable"] }
+#esp-rtos = { version = "0.4.0", features = ["esp32c2", "esp-radio", "esp-alloc"] } # or matching version
+#esp-alloc = { version = "0.11.0", features = ["esp32c2"] } # check exact version for your tree
+#esp-sync = { version = "0.1.1", features = ["esp32c2"] } # check exact version for your tree
 
+heapless = "0.8"
 # For fine tuning these settings, please refer to https://doc.rust-lang.org/cargo/reference/profiles.html
 [profile.dev]
 # The default debug profile is too slow and too big for resource-constrained devices.
